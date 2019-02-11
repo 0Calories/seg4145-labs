@@ -142,9 +142,14 @@ void stopMotors() {
 
 void traverse() {
   // Check if an object is detected 10 cm or less nearby
-  if (readSonar() <= 10) {
+  unsigned int dist = readSonar();
+  if (dist <= 100) {
     stopMotors();
   } else {
+    LCD.write(0xFE);
+    LCD.write(0x01);
+    LCD.write(0xFE);
+    LCD.print(dist);
     moveForward(1);
     delay(1000);
   }
@@ -181,7 +186,7 @@ void flashLED() {
 
 //printForward
 //displays "moving forward" on LCD
-void printForward() {
+void printForward() {/*
   LCD.write(0xFE);
   LCD.write(0x01);
   delay(10);
@@ -192,7 +197,7 @@ void printForward() {
   LCD.write(0xFE);
   LCD.write(4 + 64 + 128);
   LCD.print("forward");
-  delay(10);
+  delay(10);*/
 }
 
 //printRotateLeft
@@ -235,5 +240,5 @@ unsigned long readSonar() {
   pinMode(SONAR, INPUT);
   unsigned long duration = pulseIn(SONAR, HIGH);
   unsigned long distance = duration / (29 * 2);
-  return distance;
+  return distance;    
 }
