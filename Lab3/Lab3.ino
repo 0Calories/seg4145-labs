@@ -53,14 +53,8 @@ void setup() {
 }
 
 void loop() {
-// if (startMoving)
-//  testPath();
-//  printRotateLeft();
-//  getTemp();
-//  printTemp(temperatureData);
-//  printRotateLeft();
-//  delay(10000);
-  
+ if (startMoving)
+  traverse();
 }
 
 //backward
@@ -149,8 +143,18 @@ void stopMotors() {
 }
 
 void traverse() {
-  moveForward(1);
-  delay(1000);
+  // Check if an object is detected 10 cm or less nearby
+  unsigned int dist = readSonar();
+  if (dist <= 100) {
+    stopMotors();
+  } else {
+    LCD.write(0xFE);
+    LCD.write(0x01);
+    LCD.write(0xFE);
+    LCD.print(dist);
+    moveForward(1);
+    delay(1000);
+  }
 }
 
 void testPath() {
@@ -184,7 +188,7 @@ void flashLED() {
 
 //printForward
 //displays "moving forward" on LCD
-void printForward() {
+void printForward() {/*
   LCD.write(0xFE);
   LCD.write(0x01);
   delay(10);
@@ -195,7 +199,7 @@ void printForward() {
   LCD.write(0xFE);
   LCD.write(4 + 64 + 128);
   LCD.print("forward");
-  delay(10);
+  delay(10);*/
 }
 
 //printRotateLeft
@@ -242,6 +246,7 @@ void printTemp(byte temp) {
 }
 
 long readSonar() {
+unsigned long readSonar() {
   pinMode(SONAR, OUTPUT);
   digitalWrite(SONAR, LOW);
   delay(0.002);
@@ -250,8 +255,8 @@ long readSonar() {
   digitalWrite(SONAR, LOW);
   pinMode(SONAR, INPUT);
   unsigned long duration = pulseIn(SONAR, HIGH);
-  long distance = duration / (29 * 2);
-  return distance;
+  unsigned long distance = duration / (29 * 2);
+  return distance;    
 }
 
 void getTemp() {
