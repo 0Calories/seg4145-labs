@@ -8,7 +8,7 @@
 
 #include <SoftwareSerial.h>
 #include <Servo.h>
- 
+#include <Wire.h>
 
 // Define Constants
 #define LEFT_MOTOR      45
@@ -16,6 +16,7 @@
 #define LCD_DISPLAY     18
 #define LED             13
 #define SONAR           22
+#define TEMPSENSOR      0x68 //Address
 
 // Direction constants
 #define LEFT_BACKWARD   10
@@ -29,6 +30,8 @@
 int STRAIGHT = 0;
 int LEFT = 1;
 int RIGHT = 2;
+int reg = 0x01;
+byte temperatureData;
 
 SoftwareSerial LCD(0, LCD_DISPLAY);
 
@@ -42,17 +45,22 @@ void setup() {
  pinMode(LEFT_MOTOR, OUTPUT);
  pinMode(RIGHT_MOTOR, OUTPUT);
  pinMode(LED, OUTPUT);
+ Wire.begin();
 
  LCD.begin(9600);
  delay(10);
  delay(3000);
- 
-
 }
 
 void loop() {
- if (startMoving)
-  testPath();
+// if (startMoving)
+//  testPath();
+//  printRotateLeft();
+//  getTemp();
+//  printTemp(temperatureData);
+//  printRotateLeft();
+//  delay(10000);
+  
 }
 
 //backward
@@ -220,6 +228,19 @@ void printRotateRight() {
   delay(10);
 }
 
+void printTemp(byte temp) {
+  LCD.write(0xFE);
+  LCD.write(0x01);
+  delay(10);
+  if (temp != 0) {
+    LCD.write(0xFE);
+    LCD.write(6 + 128);
+    LCD.print(temp);
+    delay(10); 
+  }
+  delay(1000);
+}
+
 long readSonar() {
   pinMode(SONAR, OUTPUT);
   digitalWrite(SONAR, LOW);
@@ -231,4 +252,14 @@ long readSonar() {
   unsigned long duration = pulseIn(SONAR, HIGH);
   long distance = duration / (29 * 2);
   return distance;
+}
+
+void getTemp() {
+  Wire.beginTransmission(TEMPSENSOR);
+  Wire.write(reg); // Indicate temperature value to read
+  Wire.endTransmission();
+  Wire.requestFrom(TEMPSENSOR, 1); // Request data
+  while(Wire.available() < 1); // Wait for data
+  temperatureData = Wire.read(); // Temp. value
+  delay(50); // Delay 50 ms if values are read in a loop
 }
