@@ -245,7 +245,6 @@ void printTemp(byte temp) {
   delay(1000);
 }
 
-long readSonar() {
 unsigned long readSonar() {
   pinMode(SONAR, OUTPUT);
   digitalWrite(SONAR, LOW);
