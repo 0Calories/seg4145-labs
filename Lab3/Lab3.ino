@@ -52,7 +52,7 @@ void setup() {
 
 void loop() {
  if (startMoving)
-  testPath();
+  traverse();
 }
 
 //backward
@@ -141,8 +141,13 @@ void stopMotors() {
 }
 
 void traverse() {
-  moveForward(1);
-  delay(1000);
+  // Check if an object is detected 10 cm or less nearby
+  if (readSonar() <= 10) {
+    stopMotors();
+  } else {
+    moveForward(1);
+    delay(1000);
+  }
 }
 
 void testPath() {
@@ -220,7 +225,7 @@ void printRotateRight() {
   delay(10);
 }
 
-long readSonar() {
+unsigned long readSonar() {
   pinMode(SONAR, OUTPUT);
   digitalWrite(SONAR, LOW);
   delay(0.002);
@@ -229,6 +234,6 @@ long readSonar() {
   digitalWrite(SONAR, LOW);
   pinMode(SONAR, INPUT);
   unsigned long duration = pulseIn(SONAR, HIGH);
-  long distance = duration / (29 * 2);
+  unsigned long distance = duration / (29 * 2);
   return distance;
 }
