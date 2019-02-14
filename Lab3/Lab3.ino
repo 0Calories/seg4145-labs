@@ -131,17 +131,21 @@ void traverse() {
   // Check if an object is detected 10 cm or less nearby
   unsigned int dist = readSonar();
   if (dist <= STOPPING_DIST) {
-    stopMotors();
+    detachServo();
     getTemp();
-    printTemp();
+    printTemp(temperatureData);
     delay(5000);
-    // moveBackwards
+    initiateServo();
+    moveBackward(1);
+    delay(100);
     rotate(RIGHT, 90);
     moveForward(2);
     rotate(LEFT, 90);
   } else {
     moveForward(1);
-    delay(1000);    
+    detachServo();
+    delay(1000);   
+    initiateServo(); 
   }
 }
 
