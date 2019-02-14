@@ -16,8 +16,6 @@
 #define LCD_DISPLAY     18
 #define LED             13
 #define SONAR           22
-#define leftServo;
-#define rightServo;
 
 // Direction constants
 #define LEFT_BACKWARD   10
@@ -31,6 +29,8 @@
 int STRAIGHT = 0;
 int LEFT = 1;
 int RIGHT = 2;
+Servo LEFTSERVO;
+Servo RIGHTSERVO;
 
 SoftwareSerial LCD(0, LCD_DISPLAY);
 
@@ -60,8 +60,11 @@ void loop() {
 }
 
 void initiateServo(){
-  leftServo.attach(LEFT_MOTOR);
-  rightServo.attach(RIGHT_MOTOR);
+  LEFTSERVO.write(0);
+  RIGHTSERVO.write(0);
+  delay(50);
+  LEFTSERVO.attach(LEFT_MOTOR);
+  RIGHTSERVO.attach(RIGHT_MOTOR);
   delay(100);
 }
 
@@ -132,8 +135,8 @@ void moveForward(int numTiles) {
 //moveForward
 //Moves the wheels forward using the servo library
 void moveForwardServo(int numTiles) {
-  leftServo.write(180);
-  rightServo.write(0);
+  LEFTSERVO.write(180);
+  RIGHTSERVO.write(62);
   delay(TILE_TIME * numTiles);
 }
 
