@@ -151,13 +151,16 @@ void traverse() {
   unsigned int dist = readSonar();
   if (dist <= STOPPING_DIST) {
     stopMotors();
+    getTemp();
+    printTemp();
+    delay(5000);
+    // moveBackwards
+    rotate(RIGHT, 90);
+    moveForward(2);
+    rotate(LEFT, 90);
   } else {
-    LCD.write(0xFE);
-    LCD.write(0x01);
-    LCD.write(0xFE);
-    LCD.print(dist);
     moveForward(1);
-    delay(1000);
+    delay(1000);    
   }
 }
 
