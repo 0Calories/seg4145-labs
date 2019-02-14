@@ -114,7 +114,7 @@ void rotate(int direction, int degree){
     } else if (degree == 90) {
       LEFTSERVO.write(90);
       RIGHTSERVO.write(180);
-      delay(750);
+      delay(830);
     }
   }
 }
@@ -182,7 +182,7 @@ void flashLED() {
 
 //printForward
 //displays "moving forward" on LCD
-void printForward() {/*
+void printForward() {
   LCD.write(0xFE);
   LCD.write(0x01);
   delay(10);
@@ -193,7 +193,7 @@ void printForward() {/*
   LCD.write(0xFE);
   LCD.write(4 + 64 + 128);
   LCD.print("forward");
-  delay(10);*/
+  delay(10);
 }
 
 //printBackward
@@ -245,10 +245,16 @@ void printTemp(byte temp) {
   LCD.write(0xFE);
   LCD.write(0x01);
   delay(10);
+  LCD.write(0xFE);
+  LCD.write(2 + 128);
+  LCD.print("Temperature");
   if (temp != 0) {
     LCD.write(0xFE);
-    LCD.write(6 + 128);
+    LCD.write(3 + 64 + 128);
     LCD.print(temp);
+    LCD.write(0xFE);
+    LCD.write(6 + 64 + 128);
+    LCD.print("degrees");
     delay(10); 
   }
   delay(1000);
