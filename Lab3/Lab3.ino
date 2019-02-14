@@ -27,6 +27,10 @@
 // Time constants
 #define TILE_TIME       1400
 
+// Other constants
+// 20cm to account for the fact that the sensor is ~10cm back from the front of the robot
+#define STOPPING_DIST   20 
+
 int STRAIGHT = 0;
 int LEFT = 1;
 int RIGHT = 2;
@@ -145,7 +149,7 @@ void stopMotors() {
 void traverse() {
   // Check if an object is detected 10 cm or less nearby
   unsigned int dist = readSonar();
-  if (dist <= 100) {
+  if (dist <= STOPPING_DIST) {
     stopMotors();
   } else {
     LCD.write(0xFE);
