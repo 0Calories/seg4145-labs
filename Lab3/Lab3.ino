@@ -8,7 +8,7 @@
 
 #include <SoftwareSerial.h>
 #include <Servo.h>
- 
+#include <Wire.h>
 
 // Define Constants
 #define LEFT_MOTOR      45
@@ -16,6 +16,7 @@
 #define LCD_DISPLAY     18
 #define LED             13
 #define SONAR           22
+#define TEMPSENSOR      0x68 //Address
 
 // Direction constants
 #define LEFT_BACKWARD   10
@@ -26,11 +27,17 @@
 // Time constants
 #define TILE_TIME       1400
 
+// Other constants
+// 20cm to account for the fact that the sensor is ~10cm back from the front of the robot
+#define STOPPING_DIST   20 
+
 int STRAIGHT = 0;
 int LEFT = 1;
 int RIGHT = 2;
 Servo LEFTSERVO;
 Servo RIGHTSERVO;
+int reg = 0x01;
+byte temperatureData;
 
 SoftwareSerial LCD(0, LCD_DISPLAY);
 
@@ -45,17 +52,16 @@ void setup() {
  //pinMode(RIGHT_MOTOR, OUTPUT);
  
  pinMode(LED, OUTPUT);
+ Wire.begin();
 
  LCD.begin(9600);
  delay(10);
  delay(3000);
- 
-
 }
 
 void loop() {
  if (startMoving)
-  testPath();
+  traverse();
 }
 
 void initiateServo(){
@@ -122,8 +128,18 @@ void stopMotors() {
 }
 
 void traverse() {
-  moveForward(1);
-  delay(1000);
+  // Check if an object is detected 10 cm or less nearby
+  unsigned int dist = readSonar();
+  if (dist <= STOPPING_DIST) {
+    stopMotors();
+  } else {
+    LCD.write(0xFE);
+    LCD.write(0x01);
+    LCD.write(0xFE);
+    LCD.print(dist);
+    moveForward(1);
+    delay(1000);
+  }
 }
 
 void testPath() {
@@ -159,7 +175,7 @@ void flashLED() {
 
 //printForward
 //displays "moving forward" on LCD
-void printForward() {
+void printForward() {/*
   LCD.write(0xFE);
   LCD.write(0x01);
   delay(10);
@@ -170,7 +186,7 @@ void printForward() {
   LCD.write(0xFE);
   LCD.write(4 + 64 + 128);
   LCD.print("forward");
-  delay(10);
+  delay(10);*/
 }
 
 //printBackward
@@ -218,7 +234,20 @@ void printRotateRight() {
   delay(10);
 }
 
-long readSonar() {
+void printTemp(byte temp) {
+  LCD.write(0xFE);
+  LCD.write(0x01);
+  delay(10);
+  if (temp != 0) {
+    LCD.write(0xFE);
+    LCD.write(6 + 128);
+    LCD.print(temp);
+    delay(10); 
+  }
+  delay(1000);
+}
+
+unsigned long readSonar() {
   pinMode(SONAR, OUTPUT);
   digitalWrite(SONAR, LOW);
   delay(0.002);
@@ -227,6 +256,16 @@ long readSonar() {
   digitalWrite(SONAR, LOW);
   pinMode(SONAR, INPUT);
   unsigned long duration = pulseIn(SONAR, HIGH);
-  long distance = duration / (29 * 2);
-  return distance;
+  unsigned long distance = duration / (29 * 2);
+  return distance;    
+}
+
+void getTemp() {
+  Wire.beginTransmission(TEMPSENSOR);
+  Wire.write(reg); // Indicate temperature value to read
+  Wire.endTransmission();
+  Wire.requestFrom(TEMPSENSOR, 1); // Request data
+  while(Wire.available() < 1); // Wait for data
+  temperatureData = Wire.read(); // Temp. value
+  delay(50); // Delay 50 ms if values are read in a loop
 }
