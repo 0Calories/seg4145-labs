@@ -43,7 +43,7 @@ void setup() {
  // Initialize all pins.
  //pinMode(LEFT_MOTOR, OUTPUT);
  //pinMode(RIGHT_MOTOR, OUTPUT);
- initiateServo();
+ 
  pinMode(LED, OUTPUT);
 
  LCD.begin(9600);
@@ -55,89 +55,62 @@ void setup() {
 
 void loop() {
  if (startMoving)
-  //testPath();
-  moveForwardServo(10);
+  testPath();
 }
 
 void initiateServo(){
-  LEFTSERVO.write(0);
-  RIGHTSERVO.write(0);
-  delay(50);
   LEFTSERVO.attach(LEFT_MOTOR);
   RIGHTSERVO.attach(RIGHT_MOTOR);
   delay(100);
 }
 
-//backward
-//Moves both wheels backwards
-void backward() {
- analogWrite (LEFT_MOTOR, LEFT_BACKWARD);
-}
-
-// Takes 2.79s for full rotation
-//rotate
-//direction: which direction to rotate (LEFT or RIGHT)
-//degree: how many degrees (45 or 90)
-//Rotates the wheels depending on direction and degree
-void rotate(int direction, int degree) {
-  if (direction == LEFT) {
-    printRotateLeft();
-    if (degree == 45) {
-      analogWrite (LEFT_MOTOR, LEFT_BACKWARD);
-      analogWrite (RIGHT_MOTOR, RIGHT_FORWARD);
-      delay(450);
-      analogWrite(LEFT_MOTOR, 0);
-      analogWrite(RIGHT_MOTOR, 0);
-    } else if (degree == 90) {
-      analogWrite (LEFT_MOTOR, LEFT_BACKWARD);
-      analogWrite (RIGHT_MOTOR, RIGHT_FORWARD);
-      delay(925);
-      analogWrite(LEFT_MOTOR, 0);
-      analogWrite(RIGHT_MOTOR, 0);
-    } else if (degree == 135) {
-      analogWrite (LEFT_MOTOR, LEFT_BACKWARD);
-      analogWrite (RIGHT_MOTOR, RIGHT_FORWARD);
-      delay(1150);
-      analogWrite(LEFT_MOTOR, 0);
-      analogWrite(RIGHT_MOTOR, 0);
-    }
-  } else if (direction == RIGHT) {
-    printRotateRight();
-    if (degree == 45) {
-      analogWrite(LEFT_MOTOR, LEFT_FORWARD);
-      analogWrite(RIGHT_MOTOR, RIGHT_BACKWARD);
-      delay(400);
-      analogWrite(LEFT_MOTOR, 0);
-      analogWrite(RIGHT_MOTOR, 0);
-    } else if (degree == 90) {
-      analogWrite(LEFT_MOTOR, LEFT_FORWARD);
-      analogWrite(RIGHT_MOTOR, RIGHT_BACKWARD);
-      delay(725);
-      analogWrite(LEFT_MOTOR, 0);
-      analogWrite(RIGHT_MOTOR, 0);
-    }
-  }
-}
-
-void rotateServo(int direction, int degree) {
-  
-}
-
-//moveForward
-//Moves the wheels forward
-void moveForward(int numTiles) {
-  printForward();
-  analogWrite(LEFT_MOTOR, LEFT_FORWARD);
-  analogWrite(RIGHT_MOTOR, RIGHT_FORWARD);
-  delay(TILE_TIME * numTiles);
+void detachServo(){
+  LEFTSERVO.detach();
+  RIGHTSERVO.detach();
+  delay(100);
 }
 
 //moveForward
 //Moves the wheels forward using the servo library
-void moveForwardServo(int numTiles) {
+void moveForward(int numTiles) {
+  printForward();
   LEFTSERVO.write(180);
   RIGHTSERVO.write(62);
   delay(TILE_TIME * numTiles);
+}
+
+void moveBackward(int numTiles){
+  printBackward();
+  LEFTSERVO.write(0);
+  RIGHTSERVO.write(180);
+  delay(TILE_TIME * numTiles);
+}
+
+void rotate(int direction, int degree){
+  if (direction == LEFT) {
+    printRotateLeft();
+    if (degree == 45) {
+      LEFTSERVO.write(45);
+      RIGHTSERVO.write(0);
+      delay(450);
+    } else if (degree == 90) {
+      LEFTSERVO.write(45);
+      RIGHTSERVO.write(0);
+      delay(900);
+    }
+    
+  } else if (direction == RIGHT) {
+    printRotateRight();
+    if (degree == 45) {
+      LEFTSERVO.write(90);
+      RIGHTSERVO.write(180);
+      delay(450);
+    } else if (degree == 90) {
+      LEFTSERVO.write(90);
+      RIGHTSERVO.write(180);
+      delay(750);
+    }
+  }
 }
 
 //stopMotors
@@ -154,7 +127,9 @@ void traverse() {
 }
 
 void testPath() {
-  moveForwardServo(3);
+  initiateServo();
+  printBackward();
+  detachServo();
 }
 
 //displayStudentNumbers
@@ -198,6 +173,21 @@ void printForward() {
   delay(10);
 }
 
+//printBackward
+//displays "moving backward" on LCD
+void printBackward() {
+  LCD.write(0xFE);
+  LCD.write(0x01);
+  delay(10);
+  LCD.write(0xFE);
+  LCD.write(5 + 128);
+  LCD.print("moving");
+  delay(10);
+  LCD.write(0xFE);
+  LCD.write(4 + 64 + 128);
+  LCD.print("backward");
+  delay(10);
+}
 //printRotateLeft
 //displays "rotating left" on LCD
 void printRotateLeft() {
