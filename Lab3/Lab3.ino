@@ -16,6 +16,8 @@
 #define LCD_DISPLAY     18
 #define LED             13
 #define SONAR           22
+#define leftServo;
+#define rightServo;
 
 // Direction constants
 #define LEFT_BACKWARD   10
@@ -39,8 +41,9 @@ boolean startMoving = true;
 //Standard setup for arduino
 void setup() {
  // Initialize all pins.
- pinMode(LEFT_MOTOR, OUTPUT);
- pinMode(RIGHT_MOTOR, OUTPUT);
+ //pinMode(LEFT_MOTOR, OUTPUT);
+ //pinMode(RIGHT_MOTOR, OUTPUT);
+ initiateServo();
  pinMode(LED, OUTPUT);
 
  LCD.begin(9600);
@@ -52,7 +55,14 @@ void setup() {
 
 void loop() {
  if (startMoving)
-  testPath();
+  //testPath();
+  moveForwardServo(10);
+}
+
+void initiateServo(){
+  leftServo.attach(LEFT_MOTOR);
+  rightServo.attach(RIGHT_MOTOR);
+  delay(100);
 }
 
 //backward
@@ -122,13 +132,8 @@ void moveForward(int numTiles) {
 //moveForward
 //Moves the wheels forward using the servo library
 void moveForwardServo(int numTiles) {
-  Servo right;
-  Servo left;
-  right.attach(RIGHT_MOTOR);
-  left.attach(LEFT_MOTOR);
-
-  right.write(0);
-  left.write(180);
+  leftServo.write(180);
+  rightServo.write(0);
   delay(TILE_TIME * numTiles);
 }
 
