@@ -1,12 +1,12 @@
 #include <Wirefree.h>
 #include <WifiClient.h>
 WIFI_PROFILE wireless_prof = {
-/* SSID */ "StingrayTest",
+/* SSID */ "stingray",
 /* WPA/WPA2 passphrase */ "w1r3l3ss!",
 /* Robot IP address */ "10.136.160.15",
 /* subnet mask */ "255.255.255.0",
 /* Gateway IP */ "10.136.160.1", };
-String remote_server = "192.168.1.42"; // peer device IP address.
+String remote_server = "192.168.1.142"; // peer device IP address.
 String remote_port = "9876"; // arbitrary
 //Creates a client that can connect to a specified internet IP address and port number
 WifiClient client(remote_server, remote_port, PROTO_UDP);
