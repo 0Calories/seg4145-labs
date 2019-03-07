@@ -1,3 +1,6 @@
+#include <SoftwareSerial.h>
+#include <stdio.h>
+#include <Wire.h>
 #include <Wirefree.h>
 #include <WifiClient.h>
 
