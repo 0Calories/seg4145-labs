@@ -40,11 +40,12 @@ public class Server {
 			// System.out.println(in.readLine());
  
             // While input is received
-            while ((inputLine = in.readLine()) != null) {
+			int command = 0;
+            while (command!=7) {
+            	System.out.println("Reading scanner");
 
             	// Store message being sent to robot
             	String message;
-
             	try {
         			
         			// Print possible commands
@@ -58,7 +59,7 @@ public class Server {
 	            					+ "7 - Quit\n");
         			
         			// Scans the next token of the input as an int.
-        			int command = reader.nextInt();
+        			command = reader.nextInt();
         			
         			// Check for incorrect input
         			if (command == 7) {
