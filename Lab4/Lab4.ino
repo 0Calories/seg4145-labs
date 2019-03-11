@@ -28,52 +28,42 @@ WIFI_PROFILE wireless_prof = {
                  /* subnet mask */ "255.255.255.0",
                   /* Gateway IP */ "10.136.160.1", };
 
-String server = "192.168.1.166"; // Google
+String server = "192.168.1.159"; // Google
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server 
 // that you want to connect to (port 80 is default for HTTP):
-WifiClient client(server, "6969", PROTO_TCP);
+WifiClient client(server, "6969", PROTO_UDP);
 
 void setup()
 {
-  // connect to AP & start server
+  // connect to AP
   Wireless.begin(&wireless_prof);
   
   // if you get a connection, report back via serial:
   if (client.connect()) {
-    Serial.println("connection Success..");
+    Serial.println("connected");
     
-    // Make a HTTP request:
-    client.println("GET /search?q=arduino HTTP/1.0\r\n\r\n");
-    client.flush();
+    // Send message over UDP socket to peer device
+    client.println("Hello server!");
   } 
   else {
-    // kf you didn't get a connection to the server:
-    Serial.println("connection failed..");
+    // if connection setup failed:
+    Serial.println("failed");
   }
-    
-//  delay(1000);
 }
 
 void loop()
 {
   // if there are incoming bytes available 
-  // from the server, read them and print them:
-  if (client.available()) {
-    char c = client.read();
-      // Uncomment if you need to see the response in the serial monitor
- //   Serial.write(c);
+  // from the peer device, read them and print them:
+  while (client.available()) {
+    int in;
+
+    while ((in = client.read()) == -1);
+
+    Serial.print((char)in);
   }
 
-  // if the server's disconnected, stop the client:
-  if (!client.connected()) {
-    Serial.println("disconnecting.");
-    client.stop();
-
-    // do nothing forevermore:
-    for(;;)
-      ;
-  }  
-
+  delay(1);
 }

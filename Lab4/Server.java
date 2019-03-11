@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Server {
 	
-	private static final int PORT = 9876;
+	private static final int PORT = 6969;
 
 	/*
 	 * Main method to start the ServerSocket, Listen for Clients,
