@@ -23,7 +23,6 @@ public class Lab5 {
 
 		// Reading from System.in
 		Scanner reader = new Scanner(System.in);
-		createControlPanel();
 
 		try (
 
@@ -47,7 +46,7 @@ public class Lab5 {
 			// Print port information
 			System.out.println("Listening on port " + PORT);
 
-			
+			createControlPanel(out);
 
 			// While input is received
 			while (true) {
@@ -106,7 +105,7 @@ public class Lab5 {
 		frame.add(btn);
 	}
 
-	private static void createControlPanel() {
+	private static void createControlPanel(PrintWriter out) {
 		frame = new JFrame("SEG4145 Lab 5");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(5, 3));
