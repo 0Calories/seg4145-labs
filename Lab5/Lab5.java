@@ -23,6 +23,7 @@ public class Lab5 {
 
 		// Reading from System.in
 		Scanner reader = new Scanner(System.in);
+		createControlPanel();
 
 		try (
 
@@ -46,39 +47,7 @@ public class Lab5 {
 			// Print port information
 			System.out.println("Listening on port " + PORT);
 
-			frame = new JFrame("SEG4145 Lab 5");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.getContentPane().setLayout(new GridLayout(5, 3));
-
-			// Create first row
-			frame.add(new JLabel("", JLabel.CENTER));
-			frame.add(new JLabel("Select an Operation:", JLabel.CENTER));
-			frame.add(new JLabel("", JLabel.CENTER));
-
-			// Create second row
-			createButton("Move Forward", 1, frame, out);
-			createButton("Move Backward", 2, frame, out);
-			createButton("Rotate Clockwise", 3, frame, out);
-
-			// Create third row
-			createButton("Rotate Counter Clockwise", 4, frame, out);
-			createButton("Read Distance", 5, frame, out);
-			createButton("Read Temperature", 6, frame, out);
-
-			// Create fourth row
-			frame.add(new JLabel("", JLabel.CENTER));
-			operation = new JLabel("Last Operation: ", JLabel.CENTER);
-			frame.add(operation);
-			frame.add(new JLabel("", JLabel.CENTER));
-
-			// Create fifth row
-			frame.add(new JLabel("", JLabel.CENTER));
-			timestamp = new JLabel("Timestamp: ", JLabel.CENTER);
-			frame.add(timestamp);
-			frame.add(new JLabel("", JLabel.CENTER));
-
-			frame.pack();
-			frame.setVisible(true);
+			
 
 			// While input is received
 			while (true) {
@@ -135,6 +104,42 @@ public class Lab5 {
 
 		// Add to frame
 		frame.add(btn);
+	}
+
+	private static void createControlPanel() {
+		frame = new JFrame("SEG4145 Lab 5");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new GridLayout(5, 3));
+
+		// Create first row
+		frame.add(new JLabel("", JLabel.CENTER));
+		frame.add(new JLabel("Select an Operation:", JLabel.CENTER));
+		frame.add(new JLabel("", JLabel.CENTER));
+
+		// Create second row
+		createButton("Move Forward", 1, frame, out);
+		createButton("Move Backward", 2, frame, out);
+		createButton("Rotate Clockwise", 3, frame, out);
+
+		// Create third row
+		createButton("Rotate Counter Clockwise", 4, frame, out);
+		createButton("Read Distance", 5, frame, out);
+		createButton("Read Temperature", 6, frame, out);
+
+		// Create fourth row
+		frame.add(new JLabel("", JLabel.CENTER));
+		operation = new JLabel("Last Operation: ", JLabel.CENTER);
+		frame.add(operation);
+		frame.add(new JLabel("", JLabel.CENTER));
+
+		// Create fifth row
+		frame.add(new JLabel("", JLabel.CENTER));
+		timestamp = new JLabel("Timestamp: ", JLabel.CENTER);
+		frame.add(timestamp);
+		frame.add(new JLabel("", JLabel.CENTER));
+
+		frame.pack();
+		frame.setVisible(true);
 	}
 
 }
