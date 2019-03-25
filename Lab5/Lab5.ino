@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <SoftwareSerial.h>
 #include <stdio.h>
 #include <Wire.h>
+#include <Servo.h>
 #include <Wirefree.h>
 #include <WifiClient.h>
 
@@ -33,6 +34,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define RIGHT_BACKWARD()  analogWrite(8, 191.5);
 #define RIGHT_STOP()      analogWrite(8, 0);
 #define TEMPSENSOR        0x68
+#define LEFT_MOTOR      45
+#define RIGHT_MOTOR     8
+
+// Time constants
+#define TILE_TIME       1400
 
 WIFI_PROFILE wireless_prof = {
                         /* SSID */ "stingray",
@@ -41,7 +47,7 @@ WIFI_PROFILE wireless_prof = {
                  /* subnet mask */ "255.255.255.0",
                   /* Gateway IP */ "192.168.1.1", };
 
-String server = "192.168.1.143"; // Google
+String server = "192.168.1.159"; // Google
 // Initialize the Ethernet client library
 // with the IP address and port of the server 
 // that you want to connect to (port 80 is default for HTTP):
@@ -59,6 +65,11 @@ int command = 0; // Store user command 1-7
 int commandInput[3] = {-1, -1, -1};
 int count; // Stores current byte
 int currentLineIsBlank;
+
+int LEFT = 1;
+int RIGHT = 2;
+Servo LEFTSERVO;
+Servo RIGHTSERVO;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -450,7 +461,7 @@ void processUserAction(int input[]) {
     // Switch case
     switch(selection) {
         case 1:
-            moveForward(calculateDistance(input[1]));
+            moveForward(input[1]);
             stopMotor(10);
             break;
         case 2:
@@ -575,12 +586,30 @@ void stopMotor(int duration) {
 * @param duration number of milliseconds that the robot will remain in this state
 * @return (void)
 */
-void moveForward(int duration) {
-    LEFT_FORWARD();
-    RIGHT_FORWARD();
-    turning = 0;
-    printMessage("Moving", "Forward");
-    actionLength(duration);
+//void moveForward(int duration) {
+//    LEFT_FORWARD();
+//    RIGHT_FORWARD();
+//    turning = 0;
+//    printMessage("Moving", "Forward");
+//    actionLength(duration);
+//}
+
+//moveForward
+//Moves the wheels forward using the servo library
+void moveForward(int numTiles) {
+  LEFTSERVO.attach(LEFT_MOTOR);
+  RIGHTSERVO.attach(RIGHT_MOTOR);
+  delay(100);
+  
+  printMessage("Moving", "Forward");
+  LEFTSERVO.write(180);
+  RIGHTSERVO.write(62);
+  
+  delay(numTiles*TILE_TIME);
+
+  LEFTSERVO.detach();
+  RIGHTSERVO.detach();
+  delay(100);
 }
 
 /**

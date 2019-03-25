@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Lab5 {
 
-	private static final int PORT = 9876;
+	private static final int PORT = 6969;
 	public static JFrame frame;
 	public static JLabel operation;
 	public static JLabel timestamp;
@@ -126,16 +126,16 @@ public class Lab5 {
 		createButton("Read Temperature", 6, frame, out);
 
 		// Create fourth row
-		frame.add(new JLabel("", JLabel.CENTER));
+		// frame.add(new JLabel("", JLabel.CENTER));
 		operation = new JLabel("Last Operation: ", JLabel.CENTER);
 		frame.add(operation);
-		frame.add(new JLabel("", JLabel.CENTER));
+		// frame.add(new JLabel("", JLabel.CENTER));
 
 		// Create fifth row
-		frame.add(new JLabel("", JLabel.CENTER));
+		// frame.add(new JLabel("", JLabel.CENTER));
 		timestamp = new JLabel("Timestamp: ", JLabel.CENTER);
 		frame.add(timestamp);
-		frame.add(new JLabel("", JLabel.CENTER));
+		// frame.add(new JLabel("", JLabel.CENTER));
 
 		frame.pack();
 		frame.setVisible(true);
