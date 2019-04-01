@@ -38,7 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define RIGHT_MOTOR     8
 
 // Time constants
-#define TILE_TIME       1400
+#define TILE_TIME       1250
 
 WIFI_PROFILE wireless_prof = {
                         /* SSID */ "stingray",
@@ -64,6 +64,7 @@ int reg = 0x01; // For ambient temperature reader
 int command = 0; // Store user command 1-7
 int commandInput[3] = {-1, -1, -1};
 int count; // Stores current byte
+boolean turnedRight = true;
 int currentLineIsBlank;
 
 int LEFT = 1;
@@ -465,15 +466,15 @@ void processUserAction(int input[]) {
             stopMotor(10);
             break;
         case 2:
-            moveBackward(calculateDistance(input[1]));
+            moveBackward(input[1]);
             stopMotor(10);
             break;
         case 3:
-            turnRight(calculateDegrees(input[1]));
+            turnRight(input[1]);
             stopMotor(10);
             break;
         case 4:
-            turnLeft(calculateDegrees(input[1]));
+            turnLeft(input[1]);
             stopMotor(10);
             break;
         case 5:
@@ -579,20 +580,21 @@ void stopMotor(int duration) {
     delay(duration);
 }
 
-/**
-* Moves the robot forward. A delay is provided to determine how long
-* the robot will remain in this state.
-* @name moveForward
-* @param duration number of milliseconds that the robot will remain in this state
-* @return (void)
-*/
-//void moveForward(int duration) {
-//    LEFT_FORWARD();
-//    RIGHT_FORWARD();
-//    turning = 0;
-//    printMessage("Moving", "Forward");
-//    actionLength(duration);
-//}
+
+void moveBackward(int numTiles){
+  LEFTSERVO.attach(LEFT_MOTOR);
+  RIGHTSERVO.attach(RIGHT_MOTOR);
+  delay(100);
+
+  printMessage("Moving", "Backward");
+  LEFTSERVO.write(0);
+  RIGHTSERVO.write(180);
+  delay(TILE_TIME * numTiles / 5);
+
+  LEFTSERVO.detach();
+  RIGHTSERVO.detach();
+  delay(100);
+}
 
 //moveForward
 //Moves the wheels forward using the servo library
@@ -605,26 +607,11 @@ void moveForward(int numTiles) {
   LEFTSERVO.write(180);
   RIGHTSERVO.write(62);
   
-  delay(numTiles*TILE_TIME);
+  delay(numTiles*TILE_TIME / 5);
 
   LEFTSERVO.detach();
   RIGHTSERVO.detach();
   delay(100);
-}
-
-/**
-* Moves the robot backward. A delay is provided to determine how long
-* the robot will remain in this state.
-* @name moveBackward
-* @param duration number of milliseconds that the robot will remain in this state
-* @return (void)
-*/
-void moveBackward(int duration) {
-    LEFT_BACKWARD();
-    RIGHT_BACKWARD();
-    turning = 1; // Flag so wheels don't get adjusted
-    printMessage("Moving", "Backward");
-    actionLength(duration);
 }
 
 /**
@@ -635,11 +622,20 @@ void moveBackward(int duration) {
 * @return (void)
 */
 void turnLeft(int duration) {
-    LEFT_BACKWARD();
-    RIGHT_FORWARD();
-    turning = 1;
-    printMessage("Rotating", "Left");
-    actionLength(duration);
+  LEFTSERVO.attach(LEFT_MOTOR);
+  RIGHTSERVO.attach(RIGHT_MOTOR);
+  delay(100);
+  turnedRight = false;
+  
+  printMessage("Rotating", "Left");
+  LEFTSERVO.write(45);
+  RIGHTSERVO.write(0);
+  
+  delay(900 / duration);
+
+  LEFTSERVO.detach();
+  RIGHTSERVO.detach();
+  delay(100);
 }
 
 /**
@@ -650,9 +646,18 @@ void turnLeft(int duration) {
 * @return (void)
 */
 void turnRight(int duration) {
-    LEFT_FORWARD();
-    RIGHT_BACKWARD();
-    turning = 1;
-    printMessage("Rotating", "Right");
-    actionLength(duration);
+  LEFTSERVO.attach(LEFT_MOTOR);
+  RIGHTSERVO.attach(RIGHT_MOTOR);
+  delay(100);
+  turnedRight = true;
+  
+  printMessage("Rotating", "Right");
+  LEFTSERVO.write(90);
+  RIGHTSERVO.write(180);
+  
+  delay(900 / duration);
+
+  LEFTSERVO.detach();
+  RIGHTSERVO.detach();
+  delay(100);
 }
