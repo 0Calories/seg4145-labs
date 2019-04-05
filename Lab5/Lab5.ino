@@ -71,6 +71,10 @@ int LEFT = 1;
 int RIGHT = 2;
 Servo LEFTSERVO;
 Servo RIGHTSERVO;
+Servo RotationServoLeft;
+Servo RotationServoRight;
+Servo RotationServoLeft2;
+Servo RotationServoRight2;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -622,19 +626,19 @@ void moveForward(int numTiles) {
 * @return (void)
 */
 void turnLeft(int duration) {
-  LEFTSERVO.attach(LEFT_MOTOR);
-  RIGHTSERVO.attach(RIGHT_MOTOR);
+  RotationServoLeft.attach(LEFT_MOTOR);
+  RotationServoRight.attach(RIGHT_MOTOR);
   delay(100);
   turnedRight = false;
   
   printMessage("Rotating", "Left");
-  LEFTSERVO.write(45);
-  RIGHTSERVO.write(0);
+  RotationServoLeft.write(45);
+  RotationServoRight.write(0);
   
   delay(900 / duration);
 
-  LEFTSERVO.detach();
-  RIGHTSERVO.detach();
+  RotationServoLeft.detach();
+  RotationServoRight.detach();
   delay(100);
 }
 
@@ -646,18 +650,18 @@ void turnLeft(int duration) {
 * @return (void)
 */
 void turnRight(int duration) {
-  LEFTSERVO.attach(LEFT_MOTOR);
-  RIGHTSERVO.attach(RIGHT_MOTOR);
+  RotationServoLeft2.attach(LEFT_MOTOR);
+  RotationServoRight2.attach(RIGHT_MOTOR);
   delay(100);
   turnedRight = true;
   
   printMessage("Rotating", "Right");
-  LEFTSERVO.write(90);
-  RIGHTSERVO.write(180);
+  RotationServoLeft2.write(90);
+  RotationServoRight2.write(180);
   
   delay(900 / duration);
 
-  LEFTSERVO.detach();
-  RIGHTSERVO.detach();
+  RotationServoLeft2.detach();
+  RotationServoRight2.detach();
   delay(100);
 }
